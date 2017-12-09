@@ -1,6 +1,7 @@
 package com.example.android.miwok;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -9,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class WordAdapter extends ArrayAdapter<Word> {
 
     private int backgroundColor;
+    MediaPlayer mediaPlayer;
 
     public WordAdapter(@NonNull Context context, @NonNull List<Word> objects, int backgroundColor) {
 
@@ -31,16 +33,16 @@ public class WordAdapter extends ArrayAdapter<Word> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable final View convertView, @NonNull final ViewGroup parent) {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_item, parent, false);
         }
 
-        Word currentWord = getItem(position);
+        final Word currentWord = getItem(position);
 
-        LinearLayout wordLayout = listItemView.findViewById(R.id.word_layout);
+        RelativeLayout wordLayout = listItemView.findViewById(R.id.word_layout);
         int color = ContextCompat.getColor(getContext(), backgroundColor);
         wordLayout.setBackgroundColor(color);
 
@@ -65,4 +67,5 @@ public class WordAdapter extends ArrayAdapter<Word> {
         return listItemView;
 
     }
+
 }
