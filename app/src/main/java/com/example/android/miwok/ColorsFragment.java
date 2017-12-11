@@ -1,18 +1,24 @@
 package com.example.android.miwok;
 
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ColorsActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ColorsFragment extends Fragment {
 
     MediaPlayer mediaPlayer;
     private AudioManager mAudioManager;
@@ -54,13 +60,18 @@ public class ColorsActivity extends AppCompatActivity {
         }
     };
 
+
+    public ColorsFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
-        mAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         final List<Word> words = new ArrayList<>();
 
@@ -75,12 +86,12 @@ public class ColorsActivity extends AppCompatActivity {
 
         // Create an {@link WordAdapter}, whose data source is a list of {@link Word}s. The
         // adapter knows how to create list items for each item in the list.
-        WordAdapter adapter = new WordAdapter(this, words, R.color.category_colors);
+        WordAdapter adapter = new WordAdapter(getActivity(), words, R.color.category_colors);
 
         // Find the {@link ListView} object in the view hierarchy of the {@link Activity}.
         // There should be a {@link ListView} with the view ID called list, which is declared in the
         // word_list.xml file.
-        ListView listView = findViewById(R.id.list);
+        ListView listView = rootView.findViewById(R.id.list);
 
         // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
         // {@link ListView} will display list items for each {@link Word} in the list.
@@ -102,7 +113,7 @@ public class ColorsActivity extends AppCompatActivity {
 
                     // Create and setup the {@link MediaPlayer} for the audio resource associated
                     // with the current word
-                    mediaPlayer = MediaPlayer.create(ColorsActivity.this, currentWord.getAudioResourceId());
+                    mediaPlayer = MediaPlayer.create(getActivity(), currentWord.getAudioResourceId());
 
                     // Start the audio file
                     mediaPlayer.start();
@@ -114,6 +125,16 @@ public class ColorsActivity extends AppCompatActivity {
 
             }
         });
+
+        return rootView;
+
+    }
+
+    @Override
+    public void onStop() {
+
+        super.onStop();
+        releaseMediaPlayer();
 
     }
 
@@ -137,13 +158,6 @@ public class ColorsActivity extends AppCompatActivity {
             // unregisters the AudioFocusChangeListener so we don't get anymore callbacks.
             mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        releaseMediaPlayer();
 
     }
 
